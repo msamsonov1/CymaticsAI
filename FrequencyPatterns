@@ -1,0 +1,64 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def generate_cymatics(frequency, plate_size=20, damping=0.0):
+  """
+  Generates a Cymatics pattern for a given frequency.
+
+  Args:
+      frequency: The frequency of the sound wave (Hz).
+      plate_size: The size of the plate (default: 200).
+      damping: The damping factor (default: 0.0, no damping).
+
+  Returns:
+      A 2D numpy array representing the amplitude of the Cymatics pattern.
+  """
+  # Generate coordinates for a 2D grid
+  # Adjust the number of elements (200 in this case) based on your desired resolution
+  grid_points = 200  # Adjust this value for desired resolution
+  x_lin = np.linspace(0, plate_size, grid_points)  # Linear spacing for x
+  y_lin = np.linspace(0, plate_size, grid_points)  # Linear spacing for y
+
+  # Reshape into a 2D grid
+  x, y = np.meshgrid(x_lin, y_lin)
+
+  amplitude = np.sin(2*np.pi*frequency*x) * np.sin(2*np.pi*frequency*y)
+  
+  # Simulate damping effect (optional)
+  if damping > 0:
+    amplitude *= np.exp(-damping * np.sqrt(x**2 + y**2))
+  
+  return amplitude
+
+def visualize_cymatics(amplitude, plate_size=200, title="Cymatics Pattern"):
+  """
+  Visualizes the Cymatics pattern.
+
+  Args:
+      amplitude: A 2D numpy array representing the amplitude of the pattern.
+      plate_size: The size of the plate (default: 200).
+      title: The title for the plot (default: "Cymatics Pattern").
+  """
+  plt.imshow(amplitude, extent=[0, plate_size, 0, plate_size], cmap='hot')
+  plt.colorbar(label='Amplitude')
+  plt.xlabel('X-axis')
+  plt.ylabel('Y-axis')
+  plt.title(title)
+  plt.show()
+
+def main():
+  # Get user input for frequency (optional)
+  # frequency = float(input("Enter frequency (Hz): "))
+
+  # Predefined frequencies for examples (uncomment desired frequency)
+  frequencies = [639]  # Feel free to add more frequencies
+
+  for freq in frequencies:
+    # Generate Cymatics pattern
+    cymatics_data = generate_cymatics(freq)
+
+    # Visualize the pattern
+    visualize_cymatics(cymatics_data, title=f"Cymatics Pattern at {freq} Hz")
+
+if __name__ == "__main__":
+  main()
